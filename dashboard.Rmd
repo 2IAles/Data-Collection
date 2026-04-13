@@ -1,0 +1,459 @@
+---
+title: "Éducation & Bonheur dans le monde"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    theme: flatly
+    navbar:
+      - title: "IMT Mines Alès – 2IA"
+        align: right
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(DT)
+library(corrplot)
+library(scales)
+
+df <- read.csv("happiness_education_dataset.csv", stringsAsFactors = FALSE)
+
+# Nettoyage minimal
+df <- df %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.nan(.), NA, .)))
+
+# Palette couleur commune
+PAL <- colorRampPalette(c("#2c7bb6", "#ffffbf", "#d7191c"))(100)
+```
+
+# Introduction {data-icon="fa-globe"}
+
+## Row {data-height=200}
+
+### Contexte & Question scientifique
+
+**Question principale :**
+*Le niveau d'éducation d'un pays prédit-il le bonheur de sa population ?*
+
+L'éducation est souvent citée comme levier de développement humain. Le World Happiness Report évalue chaque année le bien-être subjectif des populations. Ce projet croise ces deux dimensions sur **`r nrow(df)` pays** afin d'explorer les liens entre investissement éducatif et bonheur déclaré.
+
+**Population étudiée :** États souverains disposant de données publiques accessibles (Wikipedia, World Bank).
+**Enjeux :** Identifier les variables éducatives les plus corrélées au bonheur pour orienter les politiques publiques.
+
+## Row {data-height=400}
+
+### Répartition géographique des scores de bonheur {data-width=700}
+
+```{r map_happiness}
+fig_map <- plot_geo(df, locationmode = "country names") %>%
+  add_trace(
+    z = ~happiness_score,
+    locations = ~country,
+    color = ~happiness_score,
+    colors = c("#d7191c", "#ffffbf", "#2c7bb6"),
+    text = ~paste0(country, "<br>Bonheur : ", round(happiness_score, 2),
+                   "<br>Éducation : ", round(education_index, 3)),
+    hoverinfo = "text",
+    marker = list(line = list(color = "white", width = 0.3))
+  ) %>%
+  colorbar(title = "Score de bonheur") %>%
+  layout(
+    geo = list(showframe = FALSE, showcoastlines = TRUE,
+               projection = list(type = "natural earth")),
+    margin = list(t = 10, b = 10)
+  )
+fig_map
+```
+
+### Chiffres clés {data-width=300}
+
+```{r kpi}
+n_total     <- nrow(df)
+n_happiness <- sum(!is.na(df$happiness_score))
+n_edu       <- sum(!is.na(df$education_index))
+avg_happy   <- round(mean(df$happiness_score, na.rm = TRUE), 2)
+top_country <- df %>% filter(!is.na(happiness_score)) %>%
+               slice_max(happiness_score, n = 1) %>% pull(country)
+bot_country <- df %>% filter(!is.na(happiness_score)) %>%
+               slice_min(happiness_score, n = 1) %>% pull(country)
+```
+
+**Pays dans le dataset**
+<h2 style="color:#2c7bb6">`r n_total`</h2>
+
+**Pays avec score de bonheur**
+<h2 style="color:#2c7bb6">`r n_happiness`</h2>
+
+**Score de bonheur moyen**
+<h2 style="color:#2c7bb6">`r avg_happy` / 10</h2>
+
+**Pays le plus heureux**
+<h3 style="color:#27ae60">`r top_country`</h3>
+
+**Pays le moins heureux**
+<h3 style="color:#e74c3c">`r bot_country`</h3>
+
+
+# Design of Experiment {data-icon="fa-flask"}
+
+## Row {data-height=250}
+
+### Pipeline de collecte
+
+```{r doe_pipeline, fig.height=2}
+# Tableau récapitulatif du DOE
+doe <- data.frame(
+  `#` = 1:5,
+  Source = c(
+    "Wikipedia – Education Index",
+    "Wikipedia – World Happiness Report",
+    "Wikipedia – Literacy Rate",
+    "World Bank Open API",
+    "Wikipedia – Tertiary Attainment"
+  ),
+  Type = c("HTML scraping", "HTML scraping", "HTML scraping",
+           "REST API JSON", "HTML scraping"),
+  Variables = c(
+    "education_index",
+    "happiness_score, rank_happiness, gdp_per_capita_log, social_support,\nhealthy_life_exp, freedom_choices, generosity, corruption_perception",
+    "literacy_rate_pct",
+    "gov_expenditure_edu_pct_gdp, school_enrollment_secondary_pct,\nschool_enrollment_tertiary_pct",
+    "tertiary_attainment_pct"
+  ),
+  check.names = FALSE
+)
+
+datatable(doe, options = list(dom = "t", pageLength = 10),
+          rownames = FALSE, class = "table-bordered table-sm")
+```
+
+## Row {data-height=350}
+
+### Variables du dataset {data-width=500}
+
+```{r doe_vars}
+vars_info <- data.frame(
+  Variable = c("education_index","rank_happiness","happiness_score",
+               "gdp_per_capita_log","social_support","healthy_life_exp",
+               "freedom_choices","generosity","corruption_perception",
+               "literacy_rate_pct","gov_expenditure_edu_pct_gdp",
+               "school_enrollment_secondary_pct","school_enrollment_tertiary_pct",
+               "tertiary_attainment_pct"),
+  Type = c("Éducation","Bonheur","Bonheur (label ML)",
+           "Bonheur","Bonheur","Bonheur",
+           "Bonheur","Bonheur","Bonheur",
+           "Éducation","Éducation","Éducation","Éducation","Éducation"),
+  Description = c(
+    "Indice d'éducation HDI (0–1)",
+    "Rang mondial bonheur",
+    "Score de bonheur (0–10) — variable cible",
+    "Log PIB/habitant",
+    "Soutien social perçu",
+    "Espérance de vie en bonne santé",
+    "Liberté de faire des choix",
+    "Générosité",
+    "Perception de la corruption",
+    "Taux d'alphabétisation (%)",
+    "Dépenses publiques éducation (% PIB)",
+    "Taux brut scolarisation secondaire (%)",
+    "Taux brut scolarisation supérieur (%)",
+    "Taux d'accès à l'enseignement supérieur (%)"
+  )
+)
+
+datatable(vars_info,
+          options = list(dom = "t", pageLength = 15),
+          rownames = FALSE,
+          class = "table-bordered table-sm") %>%
+  formatStyle("Type",
+    backgroundColor = styleEqual(
+      c("Éducation","Bonheur","Bonheur (label ML)"),
+      c("#d6eaf8","#d5f5e3","#fdebd0")
+    ))
+```
+
+### Taux de complétude par variable {data-width=500}
+
+```{r completeness}
+completeness <- df %>%
+  summarise(across(everything(), ~ round(mean(!is.na(.)) * 100, 1))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "pct") %>%
+  filter(variable != "country") %>%
+  arrange(pct)
+
+plot_ly(completeness,
+        x = ~pct, y = ~reorder(variable, pct),
+        type = "bar", orientation = "h",
+        marker = list(color = ~pct,
+                      colorscale = list(c(0,"#e74c3c"), c(0.5,"#f39c12"), c(1,"#27ae60")),
+                      showscale = FALSE),
+        text = ~paste0(pct, "%"), textposition = "outside",
+        hoverinfo = "text") %>%
+  layout(xaxis = list(title = "Complétude (%)", range = c(0, 110)),
+         yaxis = list(title = ""),
+         margin = list(l = 230))
+```
+
+
+# Statistiques descriptives {data-icon="fa-bar-chart"}
+
+## Row {data-height=380}
+
+### Distribution du score de bonheur {data-width=450}
+
+```{r hist_happiness}
+plot_ly(df %>% filter(!is.na(happiness_score)),
+        x = ~happiness_score,
+        type = "histogram",
+        nbinsx = 25,
+        marker = list(color = "#2c7bb6", line = list(color = "white", width = 0.5)),
+        hovertemplate = "Score : %{x}<br>Nb pays : %{y}<extra></extra>") %>%
+  layout(xaxis = list(title = "Score de bonheur"),
+         yaxis = list(title = "Nombre de pays"),
+         shapes = list(
+           list(type = "line", x0 = mean(df$happiness_score, na.rm=TRUE),
+                x1 = mean(df$happiness_score, na.rm=TRUE),
+                y0 = 0, y1 = 25,
+                line = list(color = "#e74c3c", dash = "dash", width = 2))
+         ),
+         annotations = list(
+           list(x = mean(df$happiness_score, na.rm=TRUE) + 0.15, y = 22,
+                text = paste0("Moyenne\n", round(mean(df$happiness_score, na.rm=TRUE),2)),
+                showarrow = FALSE, font = list(color="#e74c3c"))
+         ))
+```
+
+### Distribution de l'indice d'éducation {data-width=450}
+
+```{r hist_edu}
+plot_ly(df %>% filter(!is.na(education_index)),
+        x = ~education_index,
+        type = "histogram",
+        nbinsx = 25,
+        marker = list(color = "#27ae60", line = list(color = "white", width = 0.5)),
+        hovertemplate = "Indice : %{x}<br>Nb pays : %{y}<extra></extra>") %>%
+  layout(xaxis = list(title = "Indice d'éducation (HDI)"),
+         yaxis = list(title = "Nombre de pays"))
+```
+
+## Row {data-height=380}
+
+### Top 20 pays — Score de bonheur {data-width=450}
+
+```{r top20_happiness}
+top20 <- df %>%
+  filter(!is.na(happiness_score)) %>%
+  slice_max(happiness_score, n = 20) %>%
+  arrange(happiness_score)
+
+plot_ly(top20,
+        x = ~happiness_score,
+        y = ~reorder(country, happiness_score),
+        type = "bar",
+        orientation = "h",
+        marker = list(color = ~happiness_score,
+                      colorscale = list(c(0,"#abd9e9"), c(1,"#2c7bb6")),
+                      showscale = FALSE),
+        text = ~round(happiness_score, 2),
+        textposition = "outside",
+        hovertemplate = "%{y}<br>Score : %{x}<extra></extra>") %>%
+  layout(xaxis = list(title = "Score de bonheur", range = c(0, 9)),
+         yaxis = list(title = ""),
+         margin = list(l = 130))
+```
+
+### Boxplots par quartile d'éducation {data-width=450}
+
+```{r boxplot_quartile}
+df_box <- df %>%
+  filter(!is.na(education_index), !is.na(happiness_score)) %>%
+  mutate(edu_quartile = cut(education_index,
+                            breaks = quantile(education_index, probs = 0:4/4, na.rm=TRUE),
+                            labels = c("Q1 (faible)", "Q2", "Q3", "Q4 (élevé)"),
+                            include.lowest = TRUE))
+
+plot_ly(df_box, x = ~edu_quartile, y = ~happiness_score,
+        type = "box", color = ~edu_quartile,
+        colors = c("#d7191c","#fdae61","#abd9e9","#2c7bb6"),
+        hovertemplate = "%{y}<extra></extra>") %>%
+  layout(xaxis = list(title = "Quartile – Indice d'éducation"),
+         yaxis = list(title = "Score de bonheur"),
+         showlegend = FALSE)
+```
+
+## Row {data-height=300}
+
+### Tableau des données {data-width=900}
+
+```{r datatable}
+df %>%
+  mutate(across(where(is.numeric), ~ round(., 3))) %>%
+  datatable(
+    filter = "top",
+    options = list(pageLength = 8, scrollX = TRUE),
+    rownames = FALSE,
+    class = "table-bordered table-hover table-sm"
+  )
+```
+
+
+# Analyse prédictive {data-icon="fa-line-chart"}
+
+## Row {data-height=400}
+
+### Matrice de corrélation {data-width=450}
+
+```{r corrmatrix}
+num_vars <- df %>%
+  select(happiness_score, education_index, gdp_per_capita_log,
+         social_support, healthy_life_exp, freedom_choices,
+         generosity, corruption_perception, literacy_rate_pct,
+         gov_expenditure_edu_pct_gdp, tertiary_attainment_pct) %>%
+  rename(
+    "Bonheur"        = happiness_score,
+    "Éducation"      = education_index,
+    "PIB/hab (log)"  = gdp_per_capita_log,
+    "Soutien social" = social_support,
+    "Espér. vie"     = healthy_life_exp,
+    "Liberté"        = freedom_choices,
+    "Générosité"     = generosity,
+    "Anti-corruption"= corruption_perception,
+    "Alphabétisation"= literacy_rate_pct,
+    "Dépenses édu."  = gov_expenditure_edu_pct_gdp,
+    "Ens. supérieur" = tertiary_attainment_pct
+  )
+
+cor_matrix <- cor(num_vars, use = "pairwise.complete.obs")
+
+# Heatmap interactive
+cor_df <- as.data.frame(as.table(cor_matrix)) %>%
+  rename(x = Var1, y = Var2, corr = Freq)
+
+plot_ly(cor_df, x = ~x, y = ~y, z = ~round(corr, 2),
+        type = "heatmap",
+        colorscale = list(c(0,"#d7191c"), c(0.5,"#ffffbf"), c(1,"#2c7bb6")),
+        zmin = -1, zmax = 1,
+        text = ~round(corr, 2), texttemplate = "%{text}",
+        hovertemplate = "%{x} × %{y}<br>r = %{z}<extra></extra>") %>%
+  layout(xaxis = list(tickangle = -35, title = ""),
+         yaxis = list(title = ""),
+         margin = list(b = 120, l = 130))
+```
+
+### Éducation vs Bonheur (scatter interactif) {data-width=450}
+
+```{r scatter_edu_happy}
+df_sc <- df %>%
+  filter(!is.na(education_index), !is.na(happiness_score), !is.na(gdp_per_capita_log))
+
+# Régression linéaire
+lm_fit <- lm(happiness_score ~ education_index, data = df_sc)
+r2 <- round(summary(lm_fit)$r.squared, 3)
+x_seq <- seq(min(df_sc$education_index), max(df_sc$education_index), length.out = 100)
+y_pred <- predict(lm_fit, newdata = data.frame(education_index = x_seq))
+
+plot_ly() %>%
+  add_trace(data = df_sc,
+            x = ~education_index, y = ~happiness_score,
+            type = "scatter", mode = "markers",
+            marker = list(color = ~gdp_per_capita_log,
+                          colorscale = "Viridis",
+                          showscale = TRUE,
+                          colorbar = list(title = "PIB/hab\n(log)"),
+                          size = 7, opacity = 0.8),
+            text = ~paste0(country,
+                           "<br>Éducation : ", round(education_index, 3),
+                           "<br>Bonheur : ", round(happiness_score, 2),
+                           "<br>PIB/hab : ", round(gdp_per_capita_log, 2)),
+            hoverinfo = "text",
+            name = "Pays") %>%
+  add_trace(x = x_seq, y = y_pred,
+            type = "scatter", mode = "lines",
+            line = list(color = "#e74c3c", width = 2, dash = "dash"),
+            name = paste0("Régression (R²=", r2, ")"),
+            hoverinfo = "none") %>%
+  layout(xaxis = list(title = "Indice d'éducation (HDI)"),
+         yaxis = list(title = "Score de bonheur"),
+         legend = list(x = 0.01, y = 0.99))
+```
+
+## Row {data-height=380}
+
+### Corrélations avec le bonheur (classées) {data-width=450}
+
+```{r bar_corr}
+corr_happy <- cor_matrix["Bonheur", ] %>%
+  as.data.frame() %>%
+  rownames_to_column("variable") %>%
+  rename(r = ".") %>%
+  filter(variable != "Bonheur") %>%
+  arrange(r)
+
+plot_ly(corr_happy,
+        x = ~r, y = ~reorder(variable, r),
+        type = "bar", orientation = "h",
+        marker = list(color = ~ifelse(r > 0, "#2c7bb6", "#e74c3c")),
+        text = ~round(r, 3), textposition = "outside",
+        hovertemplate = "%{y}<br>r = %{x}<extra></extra>") %>%
+  layout(xaxis = list(title = "Corrélation de Pearson (r)", range = c(-0.6, 1.1)),
+         yaxis = list(title = ""),
+         shapes = list(list(type="line", x0=0, x1=0, y0=-0.5, y1=10.5,
+                            line = list(color="black", width=1))),
+         margin = list(l = 160))
+```
+
+### Pistes d'analyse prédictive {data-width=450}
+
+```{r scatter_gdp_happy}
+df_sc2 <- df %>%
+  filter(!is.na(gdp_per_capita_log), !is.na(happiness_score), !is.na(education_index))
+
+lm2 <- lm(happiness_score ~ gdp_per_capita_log, data = df_sc2)
+r2_2 <- round(summary(lm2)$r.squared, 3)
+x2 <- seq(min(df_sc2$gdp_per_capita_log), max(df_sc2$gdp_per_capita_log), length.out = 100)
+y2 <- predict(lm2, newdata = data.frame(gdp_per_capita_log = x2))
+
+plot_ly() %>%
+  add_trace(data = df_sc2,
+            x = ~gdp_per_capita_log, y = ~happiness_score,
+            type = "scatter", mode = "markers",
+            marker = list(color = ~education_index,
+                          colorscale = "Greens",
+                          showscale = TRUE,
+                          colorbar = list(title = "Indice\néducation"),
+                          size = 7, opacity = 0.8),
+            text = ~paste0(country,
+                           "<br>PIB/hab : ", round(gdp_per_capita_log, 2),
+                           "<br>Bonheur : ", round(happiness_score, 2),
+                           "<br>Éducation : ", round(education_index, 3)),
+            hoverinfo = "text",
+            name = "Pays") %>%
+  add_trace(x = x2, y = y2,
+            type = "scatter", mode = "lines",
+            line = list(color = "#e74c3c", width = 2, dash = "dash"),
+            name = paste0("Régression (R²=", r2_2, ")"),
+            hoverinfo = "none") %>%
+  layout(xaxis = list(title = "Log PIB/habitant"),
+         yaxis = list(title = "Score de bonheur"),
+         legend = list(x = 0.01, y = 0.99))
+```
+
+## Row {data-height=180}
+
+### Conclusions préliminaires & pistes ML
+
+**Variables les plus corrélées au bonheur :**
+Le soutien social, l'espérance de vie et le PIB/habitant montrent les corrélations les plus fortes avec le score de bonheur. L'indice d'éducation présente une corrélation positive significative (~0.7), confirmant le lien entre niveau éducatif et bien-être.
+
+**Pistes pour l'analyse prédictive (modèles ML) :**
+
+| Modèle | Justification |
+|--------|---------------|
+| **Régression linéaire multiple** | Baseline simple, interprétable — toutes les features numériques |
+| **Random Forest Regressor** | Capture les non-linéarités, gère les NaN, donne l'importance des variables |
+| **Gradient Boosting (XGBoost)** | Plus performant sur données tabulaires hétérogènes |
+| **Ridge / Lasso** | Utile vu la multicolinéarité entre variables éducation et PIB |
+
+**Variable cible :** `happiness_score`
+**Features principales :** `education_index`, `gdp_per_capita_log`, `social_support`, `healthy_life_exp`, `literacy_rate_pct`
