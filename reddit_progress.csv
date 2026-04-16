@@ -1,0 +1,207 @@
+country,lang,source,reddit_post_count,reddit_informative_posts,reddit_happiness_raw
+Afghanistan,en,global,25,23,-0.15279306297128353
+Albania,en,r/albania,7,3,
+Algeria,ar,r/algeria,28,22,0.22852652969946458
+Andorra,en,global,25,20,0.010895065380969496
+Angola,en,global,24,24,-0.04942093249831362
+Antigua and Barbuda,en,global,1,1,
+Argentina,es,r/argentina,50,23,0.6629883458987104
+Armenia,en,global,25,23,-0.04669359452086046
+Aruba,en,global,25,21,-0.3307909869029878
+Australia,en,r/australia,19,7,-0.3402767201468688
+Austria,de,r/austria,19,12,-0.4883895339828182
+Azerbaijan,en,global,25,22,0.17261891725728756
+Bahamas,en,global,25,24,-0.22805100619065313
+Bahrain,en,global,25,23,-0.11959172458311743
+Bangladesh,bn,r/bangladesh,26,22,0.012910482769537827
+Barbados,en,global,25,20,-0.36003236945910405
+Belarus,ru,r/belarus,25,21,-0.06365639492605171
+Belgium,nl,r/belgium,54,34,0.2103105374930498
+Belize,en,global,25,18,-0.22837697248486163
+Benin,en,global,25,19,-0.004638433406354074
+Bermuda,en,global,25,20,-0.08880915687704373
+Bhutan,en,global,25,24,0.29298217797682424
+Bolivia,es,r/bolivia,50,21,0.4705089983648009
+Bosnia and Herzegovina,en,r/bih,7,4,
+Botswana,en,global,25,20,-0.16710161507732607
+Brazil,pt,r/brazil,27,21,0.10598952331491389
+British Virgin Islands,en,global,25,22,0.23266501200830633
+Brunei,en,global,25,16,-0.03778586772431141
+Bulgaria,en,r/bulgaria,15,4,
+Burkina Faso,en,global,25,24,-0.2469782940334099
+Burundi,en,global,25,20,-0.14596462769021137
+Cambodia,en,global,25,19,0.11648499010771184
+Cameroon,en,global,25,24,0.03581845250080823
+Canada,en,r/canada,29,26,-0.07516927669030093
+Cape Verde,en,global,25,18,-0.2416650019111976
+Cayman Islands,en,global,25,18,-0.30144163399804386
+Central African Republic,en,global,25,21,-0.06442968282989357
+Chad,en,global,25,23,0.033118911176682926
+Chile,es,r/chile,50,38,0.8056591977908032
+China,zh,r/china,25,23,-0.29975723843112606
+Colombia,es,r/colombia,51,46,0.5595397015073901
+Comoros,en,global,25,21,-0.10845884241270243
+Congo,en,global,25,22,-0.14441555675179477
+Costa Rica,en,global,25,23,0.10142081964083383
+Croatia,en,r/croatia,6,2,
+Cuba,es,r/cuba,40,18,0.2647736290713745
+Curacao,en,global,25,20,-0.3280268094867666
+Cyprus,en,global,25,20,-0.2792951860829741
+Czech Republic,cs,r/czech,21,13,0.7056670379667754
+DR Congo,en,global,25,22,-0.06540798571827441
+Denmark,da,r/denmark,30,27,0.059034812661802494
+Djibouti,en,global,25,19,-0.207050544127295
+Dominica,en,global,25,17,-0.08543831016273953
+Dominican Republic,es,r/Dominican,50,23,0.785550269736314
+East Timor,en,global,19,16,-0.3531166665747996
+Ecuador,es,r/ecuador,32,16,0.9396847080866285
+Egypt,ar,r/egypt,12,11,0.416819469620213
+El Salvador,en,global,25,25,-0.32545870968141855
+Eritrea,en,global,25,23,-0.3411942200976478
+Estonia,en,global,25,18,-0.028989045935594815
+Ethiopia,en,r/ethiopia,33,23,-0.42076113136861143
+Fiji,en,global,25,24,-0.18987165502972073
+Finland,fi,r/finland,25,21,0.14842772027684734
+France,fr,r/france,93,75,0.5641155021020546
+Gabon,en,global,25,21,-0.22222389184596925
+Gambia,en,global,25,19,-0.11267067301233322
+Georgia,en,global,0,0,
+Germany,de,r/germany,28,24,-0.095611709676009
+Ghana,en,r/ghana,50,25,0.15880802717379566
+Greece,el,r/greece,52,37,0.7598825181358733
+Grenada,en,global,24,22,-0.044353136592066085
+Guatemala,en,global,25,24,-0.03369728696695718
+Guinea,en,global,25,21,-0.07577031745355885
+Guinea-Bissau,en,global,24,18,-0.19191882203500116
+Guyana,en,global,25,21,-0.3248323144874163
+Haiti,en,global,25,22,-0.12995649307697443
+Honduras,en,global,25,24,-0.07959980026923756
+Hong Kong,en,global,25,22,0.12346957151885346
+"Hong Kong SAR, China",en,global,1,1,
+Hungary,hu,r/hungary,9,9,0.6856796243797796
+Iceland,en,global,25,21,-0.03126612808789224
+India,hi,r/india,25,24,-0.022820250420871446
+Indonesia,id,r/indonesia,46,33,0.07585860252540379
+Iran,fa,r/iran,27,23,-0.24817261247848102
+Iraq,en,global,25,25,-0.06281925383681379
+Ireland,en,r/ireland,47,35,-0.09114801217698491
+Israel,he,r/israel,25,23,-0.3057047809437251
+Italy,it,r/italy,50,36,0.5585212031188302
+Ivory Coast,en,global,25,22,-0.3579938988180923
+Jamaica,en,global,25,20,-0.01728703319527225
+Japan,ja,r/japan,25,23,0.06863357707835692
+Jordan,ar,r/jordan,26,25,-0.20494588579554518
+Kazakhstan,ru,r/kazakhstan,27,25,-0.1802424864215859
+Kenya,sw,r/kenya,60,32,-0.2455973796419572
+Kiribati,en,global,18,16,-0.30238171445801804
+Kosovo,en,global,25,19,-0.10563966881500572
+Kuwait,en,global,25,25,-0.11729518457598331
+Kyrgyzstan,en,global,25,24,-0.1410484381460828
+Laos,en,global,25,25,-0.20809522616556828
+Latvia,en,global,25,22,-0.026958615796480078
+Lebanon,ar,r/lebanon,28,28,0.0017722596308982074
+Lesotho,en,global,25,19,-0.05422705358808247
+Liberia,en,global,25,21,-0.10353230609284625
+Libya,en,global,25,24,-0.3340113828685563
+Liechtenstein,en,global,25,22,-0.42473517177142905
+Lithuania,en,global,25,23,-0.05223488455685978
+Luxembourg,en,global,25,23,0.10460998885717383
+"Macao SAR, China",en,global,0,0,
+Madagascar,en,global,25,24,-0.2560584574795556
+Malawi,en,global,25,18,-0.04532091192215607
+Malaysia,ms,r/malaysia,38,36,0.46002111536146933
+Maldives,en,global,25,24,-0.12207260647062378
+Mali,en,global,25,24,-0.19017714023705812
+Malta,en,global,25,23,0.07219842478944183
+Marshall Islands,en,global,25,24,-0.24584578136690277
+Mauritania,en,global,25,21,-0.1976951682345833
+Mauritius,en,global,25,16,-0.08201706157103335
+Mexico,es,r/mexico,51,44,0.8557738536640932
+Moldova,en,global,25,20,-0.2417076705296072
+Monaco,en,global,25,22,-0.09705660003858113
+Mongolia,en,global,25,20,-0.2736269668177413
+Montenegro,en,global,25,15,-0.06401731661427545
+Morocco,ar,r/morocco,27,24,-0.0407811044581998
+Mozambique,en,global,25,19,-0.37262117501445857
+Myanmar,en,global,25,25,-0.06027144565522448
+Namibia,en,global,25,22,0.14762787362859542
+Nauru,en,global,17,16,-0.11545097799298186
+Nepal,en,r/nepal,52,29,-0.1256645255709729
+Netherlands,nl,r/netherlands,0,0,
+New Zealand,en,r/newzealand,0,0,
+Nicaragua,en,global,0,0,
+Niger,en,global,0,0,
+Nigeria,en,r/nigeria,0,0,
+North Macedonia,en,global,0,0,
+Norway,no,r/norway,0,0,
+Oman,en,global,0,0,
+Pakistan,en,r/pakistan,0,0,
+Palau,en,global,0,0,
+Palestine,en,global,0,0,
+Panama,en,global,0,0,
+Papua New Guinea,en,global,0,0,
+Paraguay,es,r/paraguay,0,0,
+Peru,es,r/peru,0,0,
+Philippines,en,r/Philippines,0,0,
+Poland,pl,r/poland,0,0,
+Portugal,pt,r/portugal,0,0,
+Puerto Rico (US),en,global,0,0,
+Qatar,en,global,0,0,
+Republic of Moldova,en,global,0,0,
+Republic of the Congo,en,global,0,0,
+Romania,ro,r/romania,0,0,
+Russia,ru,r/russia,0,0,
+Rwanda,en,global,0,0,
+Saint Kitts and Nevis,en,global,0,0,
+Saint Lucia,en,global,0,0,
+Saint Vincent and the Grenadines,en,global,0,0,
+Samoa,en,global,0,0,
+San Marino,en,global,0,0,
+Saudi Arabia,ar,r/saudiarabia,0,0,
+Senegal,en,global,0,0,
+Serbia,en,r/serbia,0,0,
+Seychelles,en,global,0,0,
+Sierra Leone,en,global,0,0,
+Singapore,en,r/singapore,0,0,
+Sint Maarten (Dutch part),en,global,0,0,
+Slovakia,cs,r/slovakia,0,0,
+Slovenia,en,r/slovenia,0,0,
+Solomon Islands,en,global,0,0,
+Somalia,en,global,0,0,
+South Africa,en,r/southafrica,0,0,
+South Korea,ko,r/korea,0,0,
+South Sudan,en,global,0,0,
+Spain,es,r/spain,0,0,
+Sri Lanka,en,r/srilanka,0,0,
+Sudan,en,global,0,0,
+Suriname,en,global,0,0,
+Swaziland,en,global,0,0,
+Sweden,sv,r/sweden,0,0,
+Switzerland,de,r/switzerland,0,0,
+Syria,en,global,0,0,
+São Tomé and Príncipe,en,global,0,0,
+Taiwan,zh,r/taiwan,0,0,
+Tajikistan,en,global,0,0,
+Tanzania,en,global,0,0,
+Thailand,th,r/Thailand,0,0,
+Togo,en,global,0,0,
+Tonga,en,global,0,0,
+Trinidad and Tobago,en,global,0,0,
+Tunisia,ar,r/Tunisia,0,0,
+Turkey,tr,r/Turkey,0,0,
+Turkmenistan,en,global,0,0,
+Turks and Caicos Islands,en,global,0,0,
+Tuvalu,en,global,0,0,
+Uganda,en,r/Uganda,0,0,
+Ukraine,uk,r/ukraine,0,0,
+United Arab Emirates,ar,r/UAE,0,0,
+United Kingdom,en,r/unitedkingdom,0,0,
+United States,en,r/AskAmericans,0,0,
+Uruguay,es,r/uruguay,0,0,
+Uzbekistan,ru,r/uzbekistan,0,0,
+Vanuatu,en,global,0,0,
+Venezuela,es,r/vzla,0,0,
+Vietnam,vi,r/vietnam,0,0,
+Yemen,en,global,0,0,
+Zambia,en,global,0,0,
+Zimbabwe,en,global,0,0,
